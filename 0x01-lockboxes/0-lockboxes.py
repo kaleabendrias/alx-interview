@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 def canUnlockAll(boxes):
-    """Checks if all the boxes can be opened."""
+    """determines if all the boxes can be opened."""
     if len(boxes) == 0:
         return False
     if type(boxes) is not list:
