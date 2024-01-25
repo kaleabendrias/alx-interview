@@ -1,42 +1,47 @@
 #!/usr/bin/python3
+
 import sys
-import signal
-from datetime import datetime
 
 
-def print_stats(total_size, status_counts):
-    print("File size: {}".format(total_size))
-    for code, count in sorted(status_counts.items()):
-        print("{}: {}".format(code, count))
+def print_msg(dict_sc, total_file_size):
+    """print_msg"""
+
+    print("File size: {}".format(total_file_size))
+    for key, val in sorted(dict_sc.items()):
+        if val != 0:
+            print("{}: {}".format(key, val))
 
 
-def handle_interrupt(signal, frame):
-    print_stats(total_size, status_counts)
-    sys.exit(0)
-
-
-signal.signal(signal.SIGINT, handle_interrupt)
-
-line_count = 0
-total_size = 0
-status_counts = {}
+total_file_size = 0
+code = 0
+counter = 0
+dict_sc = {"200": 0,
+           "301": 0,
+           "400": 0,
+           "401": 0,
+           "403": 0,
+           "404": 0,
+           "405": 0,
+           "500": 0}
 
 try:
     for line in sys.stdin:
-        line = line.strip()
-        parts = line.split()
-        if len(parts) >= 7:
-            ip, _, _, _, _, status_code, size = parts[:7]
-            if status_code.isdigit():
-                status_code = int(status_code)
-                size = int(size)
-                line_count += 1
-                total_size += size
-                status_counts[status_code] = status_counts.get(
-                    status_code, 0) + 1
-                if line_count % 10 == 0:
-                    print_stats(total_size, status_counts)
-except KeyboardInterrupt:
-    pass
+        parsed_line = line.split()
+        parsed_line = parsed_line[::-1]
 
-print_stats(total_size, status_counts)
+        if len(parsed_line) > 2:
+            counter += 1
+
+            if counter <= 10:
+                total_file_size += int(parsed_line[0])  # file size
+                code = parsed_line[1]  # status code
+
+                if (code in dict_sc.keys()):
+                    dict_sc[code] += 1
+
+            if (counter == 10):
+                print_msg(dict_sc, total_file_size)
+                counter = 0
+
+finally:
+    print_msg(dict_sc, total_file_size)
