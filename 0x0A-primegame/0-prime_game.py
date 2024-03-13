@@ -5,6 +5,7 @@ prime number from the set and removing that number and its multiples from
 the set. The player that cannot make a move loses the game.
 """
 
+
 def is_prime(num):
     """Check if a number is prime.
 
@@ -25,6 +26,7 @@ def is_prime(num):
             return False
     return True
 
+
 def primes_up_to_n(n):
     """Generate a list of prime numbers up to n.
 
@@ -40,26 +42,29 @@ def primes_up_to_n(n):
             primes.append(i)
     return primes
 
+
 def isWinner(x, nums):
-    """Check who wins the most rounds in a game of removing primes from consecutive integers.
+    """Check who wins the most rounds in a game of removing primes
+    from consecutive integers.
 
     Args:
         x (int): The number of rounds.
         nums (list of int): An array of n for each round.
 
     Returns:
-        str or None: The name of the player that won the most rounds. If the winner cannot be determined, returns None.
+        str or None: The name of the player that won the most rounds.
+        If the winner cannot be determined, returns None.
     """
     maria_wins = 0
     ben_wins = 0
-    
+
     for n in nums:
         primes = primes_up_to_n(n)
         if len(primes) % 2 == 0:
             ben_wins += 1
         else:
             maria_wins += 1
-    
+
     if maria_wins > ben_wins:
         return "Maria"
     elif maria_wins < ben_wins:
